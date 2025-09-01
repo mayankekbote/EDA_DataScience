@@ -24,15 +24,18 @@ if uploaded_file is not None:
     )
 
     # 1. Missing values & data types
-    with tab1:
-        st.subheader("📌 Missing Values & Data Types")
-        buffer = []
-        df.info(buf=buffer.append)
-        s = "\n".join(buffer)
-        st.text(s)
+with tab1:
+    st.subheader("📌 Missing Values & Data Types")
 
-        st.write("### Missing Values")
-        st.write(df.isnull().sum())
+    import io
+    buffer = io.StringIO()
+    df.info(buf=buffer)
+    s = buffer.getvalue()
+    st.text(s)
+
+    st.write("### Missing Values")
+    st.write(df.isnull().sum())
+
 
     # 2. Summary statistics
     with tab2:
