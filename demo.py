@@ -2,8 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-
+import io
 
 st.title("📊 EDA Dashboard")
 
@@ -24,18 +23,15 @@ if uploaded_file is not None:
     )
 
     # 1. Missing values & data types
-with tab1:
-    st.subheader("📌 Missing Values & Data Types")
+    with tab1:
+        st.subheader("📌 Missing Values & Data Types")
+        buffer = io.StringIO()
+        df.info(buf=buffer)
+        s = buffer.getvalue()
+        st.text(s)
 
-    import io
-    buffer = io.StringIO()
-    df.info(buf=buffer)
-    s = buffer.getvalue()
-    st.text(s)
-
-    st.write("### Missing Values")
-    st.write(df.isnull().sum())
-
+        st.write("### Missing Values")
+        st.write(df.isnull().sum())
 
     # 2. Summary statistics
     with tab2:
@@ -49,21 +45,21 @@ with tab1:
 
         for col in num_cols:
             st.write(f"**Distribution of {col}**")
-            plt.figure(figsize=(6,4))
-            sns.histplot(df[col].dropna(), kde=True)
-            st.pyplot()
+            fig, ax = plt.subplots(figsize=(6, 4))
+            sns.histplot(df[col].dropna(), kde=True, ax=ax)
+            st.pyplot(fig)
 
             st.write(f"**Boxplot of {col}**")
-            plt.figure(figsize=(6,4))
-            sns.boxplot(x=df[col])
-            st.pyplot()
+            fig, ax = plt.subplots(figsize=(6, 4))
+            sns.boxplot(x=df[col], ax=ax)
+            st.pyplot(fig)
 
     # 4. Correlation heatmap
     with tab4:
         st.subheader("📌 Correlation Heatmap")
-        plt.figure(figsize=(10,6))
-        sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm")
-        st.pyplot()
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm", ax=ax)
+        st.pyplot(fig)
 
     # 5. Categorical analysis
     with tab5:
@@ -71,10 +67,10 @@ with tab1:
         cat_cols = df.select_dtypes(include=['object', 'category']).columns
         for col in cat_cols:
             st.write(f"**Countplot of {col}**")
-            plt.figure(figsize=(6,4))
-            sns.countplot(x=df[col])
+            fig, ax = plt.subplots(figsize=(6, 4))
+            sns.countplot(x=df[col], ax=ax)
             plt.xticks(rotation=45)
-            st.pyplot()
+            st.pyplot(fig)
 
             st.write(f"**Value Counts for {col}**")
             st.write(df[col].value_counts())
