@@ -29,9 +29,9 @@ if uploaded_file is not None:
         info_df = pd.DataFrame({
         "Column": df.columns,
         "Data Type": df.dtypes.values,
-        "Non-Null Count": df.notnull().sum().values,
-        "Missing Count": df.isnull().sum().values
+        "Non-Null Count": df.notnull().sum().values
         })
+        st.dataframe(info_dataframe)
         st.write("### Missing Values")
         st.write(df.isnull().sum())
 
