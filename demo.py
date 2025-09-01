@@ -31,7 +31,7 @@ if uploaded_file is not None:
         "Data Type": df.dtypes.values,
         "Non-Null Count": df.notnull().sum().values
         })
-        st.dataframe(info_dataframe)
+        st.dataframe(info_df)
         st.write("### Missing Values")
         st.write(df.isnull().sum())
 
