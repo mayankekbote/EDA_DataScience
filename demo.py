@@ -25,11 +25,13 @@ if uploaded_file is not None:
     # 1. Missing values & data types
     with tab1:
         st.subheader("📌 Missing Values & Data Types")
-        buffer = io.StringIO()
-        df.info(buf=buffer)
-        s = buffer.getvalue()
-        st.text(s)
 
+        info_df = pd.DataFrame({
+        "Column": df.columns,
+        "Data Type": df.dtypes.values,
+        "Non-Null Count": df.notnull().sum().values,
+        "Missing Count": df.isnull().sum().values
+        })
         st.write("### Missing Values")
         st.write(df.isnull().sum())
 
